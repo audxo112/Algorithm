@@ -2,29 +2,23 @@
 import sys
 from collections import deque
 
-IN, IK = map(int, sys.stdin.readline().split())
-
 
 def solution(N, K):
-    visited = set()
     if N == K:
         return 0
 
-    queue = deque([(N, 0)])
+    queue, visited = deque([(N, 0)]), {N}
     while queue:
         n, step = queue.popleft()
-        if n * 2 == K or n + 1 == K or n - 1 == K:
-            return step + 1
-        if 0 <= n * 2 <= 100000 and n * 2 not in visited:
-            visited.add(n * 2)
-            queue.append((n * 2, step + 1))
-        if 0 <= n + 1 <= 100000 and n + 1 not in visited:
-            visited.add(n + 1)
-            queue.append((n + 1, step + 1))
-        if 0 <= n - 1 <= 100000 and n - 1 not in visited:
-            visited.add(n - 1)
-            queue.append((n - 1, step + 1))
+
+        for nn in [n * 2, n + 1, n - 1]:
+            if nn < 0 or nn > 100000 or nn in visited:
+                continue
+            if nn == K:
+                return step + 1
+            visited.add(nn)
+            queue.append((nn, step + 1))
 
 
+IN, IK = map(int, sys.stdin.readline().split())
 print(solution(IN, IK))
-
