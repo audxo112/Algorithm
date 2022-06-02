@@ -3,32 +3,35 @@ import sys
 from collections import deque
 
 
-dirs = [(0, 1), (-1, 0), (0, -1), (1, 0)]
+dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 
-def solution(N, M, board, visited):
-    queue = deque([(0, 0, 1, True)])
+def solution(N, M, board):
+    if N == 1 and M == 1:
+        return 1
+
+    visited = [[2] * M for _ in range(N)]
+    visited[0][0] = 0
+    queue = deque([(0, 0)])
+    dist = 1
     while queue:
-        x, y, dist, chance = queue.popleft()
-        for (dx, dy) in dirs:
-            nx, ny = x + dx, y + dy
-            ni = ny * M + nx
-            if nx < 0 or nx >= M or ny < 0 or ny >= N or visited[ni] or (not chance and board[ni] == '1'):
-                continue
-            if nx == M - 1 and ny == N - 1:
-                return dist + 1
-            visited[ni] = True
-            if board[ni] == '1' and chance:
-                queue.append((nx, ny, dist + 1, False))
-            elif board[ni] == '0':
-                queue.append((nx, ny, dist + 1, chance))
+        dist += 1
+        for _ in range(len(queue)):
+            x, y = queue.popleft()
+            for (dx, dy) in dirs:
+                nx, ny = x + dx, y + dy
+                if nx < 0 or nx >= M or ny < 0 or ny >= N:
+                    continue
+                k = board[ny][nx] + visited[y][x]
+                if k < visited[ny][nx] and k <= 1:
+                    if (nx, ny) == (M - 1, N - 1):
+                        return dist
+                    visited[ny][nx] = k
+                    queue.append((nx, ny))
     return -1
 
 
 IN, IM = map(int, sys.stdin.readline().split())
-IVisited = [True] + [False] * (IN * IM - 1)
-IBoard = []
-for _ in range(IN):
-    IBoard.extend(list(sys.stdin.readline().strip()))
-print(solution(IN, IM, IBoard, IVisited))
+IBoard = [list(map(int, sys.stdin.readline().rstrip())) for _ in range(IN)]
+print(solution(IN, IM, IBoard))
 
