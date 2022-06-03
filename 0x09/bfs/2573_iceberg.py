@@ -27,7 +27,7 @@ def bfs(N, M, board, visited, melt, sx, sy):
 
 def solution(N, M, board, ice):
     visited, melt, year = set(), dict(), 0
-    while True:
+    while ice:
         cnt = 0
         for (ix, iy) in ice:
             if (ix, iy) not in visited:
@@ -38,14 +38,12 @@ def solution(N, M, board, ice):
         for (mx, my) in melt.keys():
             board[my][mx] -= melt[(mx, my)]
             if board[my][mx] <= 0:
-                IIce.remove((mx, my))
-
-        if not IIce:
-            return 0
+                ice.remove((mx, my))
 
         year += 1
         melt.clear()
         visited.clear()
+    return 0
 
 
 IN, IM = map(int, sys.stdin.readline().split())
