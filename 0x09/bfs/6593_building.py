@@ -12,7 +12,7 @@ def init_board(L, R, C, board, visited, queue):
             for x, b in enumerate(sys.stdin.readline().strip()):
                 if b == "S":
                     visited[z * R * C + y * C + x] = True
-                    queue.append((x, y, z, 0))
+                    queue.append((x, y, z))
                     board.append(".")
                 else:
                     board.append(b)
@@ -21,18 +21,21 @@ def init_board(L, R, C, board, visited, queue):
 
 
 def solution(L, R, C, board, visited, queue):
+    dist = 0
     while queue:
-        x, y, z, dist = queue.popleft()
+        dist += 1
+        for _ in range(len(queue)):
+            x, y, z = queue.popleft()
 
-        for (dx, dy, dz) in dirs:
-            nx, ny, nz = x + dx, y + dy, z + dz
-            ni = nz * R * C + ny * C + nx
-            if nx < 0 or nx >= C or ny < 0 or ny >= R or nz < 0 or nz >= L or visited[ni] or board[ni] == "#":
-                continue
-            if board[ni] == "E":
-                return f"Escaped in {dist + 1} minute(s)."
-            visited[ni] = True
-            queue.append((nx, ny, nz, dist + 1))
+            for (dx, dy, dz) in dirs:
+                nx, ny, nz = x + dx, y + dy, z + dz
+                ni = nz * R * C + ny * C + nx
+                if nx < 0 or nx >= C or ny < 0 or ny >= R or nz < 0 or nz >= L or visited[ni] or board[ni] == "#":
+                    continue
+                if board[ni] == "E":
+                    return f"Escaped in {dist} minute(s)."
+                visited[ni] = True
+                queue.append((nx, ny, nz))
     return "Trapped!"
 
 
