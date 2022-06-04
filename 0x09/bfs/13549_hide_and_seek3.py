@@ -10,11 +10,12 @@ def solution(N, K):
     visited = [False] * 100001
     visited[N] = [True]
     queue = [(0, N)]
+    MK = K * 3 / 2
 
     while queue:
         t, n = heappop(queue)
         nm = n
-        while (nm := 2 * nm) <= 100000 and 0 < nm < 2 * K:
+        while (nm := 2 * nm) <= 100000 and 0 < nm < MK:
             if visited[nm]:
                 continue
             if nm == K:
