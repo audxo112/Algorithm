@@ -49,7 +49,8 @@ def solution(H, W, board, key):
         x, y = queue.popleft()
         for (dx, dy) in dirs:
             nx, ny = x + dx, y + dy
-            if nx < 0 or nx >= W or ny < 0 or ny >= H or visited[ny][nx] or board[ny][nx] == "*":
+            if nx < 0 or nx >= W or ny < 0 or ny >= H or \
+                    visited[ny][nx] or board[ny][nx] == "*":
                 continue
             doc += process(board, visited, queue, door, key, nx, ny)
     return doc

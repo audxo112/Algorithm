@@ -48,6 +48,7 @@ def solution(R, C, board):
                 queue.extend(bfs(R, C, board, swans, oid, x, y))
                 oid += 1
     date = 0
+
     while queue:
         date += 1
         tmp = []
@@ -73,4 +74,3 @@ def solution(R, C, board):
 IR, IC = map(int, sys.stdin.readline().split())
 IBoard = [list(sys.stdin.readline().rstrip()) for _ in range(IR)]
 print(solution(IR, IC, IBoard))
-
