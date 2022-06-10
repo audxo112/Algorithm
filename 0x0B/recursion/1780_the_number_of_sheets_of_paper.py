@@ -2,33 +2,33 @@
 import sys
 
 
-def recursion(N, board, answer):
+def check(N, board, sx, sy):
+    val = board[sy][sx]
+    for y in range(sy, sy + N):
+        for x in range(sx, sx + N):
+            if val != board[y][x]:
+                return False
+    return True
+
+
+def recursion(N, board, answer, sx, sy):
     if N == 1:
-        answer[board[0][0] + 1] += 1
+        answer[board[sy][sx] + 1] += 1
         return
 
-    if board[0][0] == 0:
-        for i in range(N):
-            if board[i].count(0) != N:
-                break
-        else:
-            answer[1] += 1
-            return
-    else:
-        ns = sum(map(sum, board)) // (N * N)
-        if ns != 0:
-            answer[ns + 1] += 1
-            return
+    if check(N, board, sx, sy):
+        answer[board[sy][sx] + 1] += 1
+        return
 
     nn = N // 3
-    for y in range(0, N, nn):
-        for x in range(0, N, nn):
-            recursion(nn, [board[ny][x:x + nn] for ny in range(y, y + nn)], answer)
+    for y in range(sy, sy + N, nn):
+        for x in range(sx, sx + N, nn):
+            recursion(nn, board, answer, x, y)
 
 
 def solution(N, board):
     answer = [0, 0, 0]
-    recursion(N, board, answer)
+    recursion(N, board, answer, 0, 0)
     return answer
 
 
