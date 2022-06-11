@@ -2,34 +2,47 @@
 import sys
 
 
-def check(N, board, sx, sy):
-    val = board[sy][sx]
-    for y in range(sy, sy + N):
-        for x in range(sx, sx + N):
-            if val != board[y][x]:
-                return False
-    return True
+dic = {
+    -1: (1, 0, 0),
+    0: (0, 1, 0),
+    1: (0, 0, 1),
+}
 
 
-def recursion(N, board, answer, sx, sy):
+def split(N, sx, sy):
+    yield sx, sy
+    yield sx, sy + N
+    yield sx, sy + 2 * N
+    yield sx + N, sy
+    yield sx + N, sy + N
+    yield sx + N, sy + 2 * N
+    yield sx + 2 * N, sy
+    yield sx + 2 * N, sy + N
+    yield sx + 2 * N, sy + 2 * N
+
+
+def recursion(N, board, sx, sy):
     if N == 1:
-        answer[board[sy][sx] + 1] += 1
-        return
-
-    if check(N, board, sx, sy):
-        answer[board[sy][sx] + 1] += 1
-        return
+        return dic[board[sy][sx]]
 
     nn = N // 3
-    for y in range(sy, sy + N, nn):
-        for x in range(sx, sx + N, nn):
-            recursion(nn, board, answer, x, y)
+    a = b = c = 0
+    for (x, y) in split(nn, sx, sy):
+        ca, cb, cc = recursion(nn, board, x, y)
+        a, b, c = a + ca, b + cb, c + cc
+
+    if a == 0 and b == 0:
+        return 0, 0, 1
+    elif a == 0 and c == 0:
+        return 0, 1, 0
+    elif b == 0 and c == 0:
+        return 1, 0, 0
+    else:
+        return a, b, c
 
 
 def solution(N, board):
-    answer = [0, 0, 0]
-    recursion(N, board, answer, 0, 0)
-    return answer
+    return recursion(N, board, 0, 0)
 
 
 IN = int(sys.stdin.readline())
