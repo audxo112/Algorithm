@@ -3,12 +3,6 @@ import sys
 from collections import defaultdict
 
 
-def dirs(N, x, y):
-    while x < N and y >= 0:
-        yield x, y
-        x, y = x + 1, y - 1
-
-
 def back_tracking(N, pos, m_slop, p_slop, n, empty=0):
     if N <= n:
         return n // 2 - empty
