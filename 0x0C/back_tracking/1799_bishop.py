@@ -9,22 +9,22 @@ def dirs(N, x, y):
         x, y = x + 1, y - 1
 
 
-def back_tracking(N, M, pos, m_slop, p_slop, m, empty=0):
-    if M <= m:
-        return m // 2 - empty
+def back_tracking(N, pos, m_slop, p_slop, n, empty=0):
+    if N <= n:
+        return n // 2 - empty
     cnt = place = 0
-    if pos[m]:
-        for x, y in pos[m]:
+    if pos[n]:
+        for x, y in pos[n]:
             if not m_slop[x + y] and not p_slop[x - y]:
                 m_slop[x + y] = p_slop[x - y] = True
-                cnt = max(back_tracking(N, M, pos, m_slop, p_slop, m + 2, empty), cnt)
+                cnt = max(back_tracking(N, pos, m_slop, p_slop, n + 2, empty), cnt)
                 m_slop[x + y] = p_slop[x - y] = False
             else:
                 place += 1
-        if len(pos[m]) == place:
-            cnt = max(back_tracking(N, M, pos, m_slop, p_slop, m + 2, empty + 1), cnt)
+        if len(pos[n]) == place:
+            cnt = max(back_tracking(N, pos, m_slop, p_slop, n + 2, empty + 1), cnt)
     else:
-        cnt = max(back_tracking(N, M, pos, m_slop, p_slop, m + 2, empty + 1), cnt)
+        cnt = max(back_tracking(N, pos, m_slop, p_slop, n + 2, empty + 1), cnt)
     return cnt
 
 
@@ -35,7 +35,7 @@ def solution(N, board):
     for x, y in [(x, y) for x in range(N) for y in range(N)]:
         if board[y][x] == "1":
             pos[x + y].append((x, y))
-    return back_tracking(N, 2 * N - 1, pos, m_slop, p_slop, 0) + back_tracking(N, 2 * N - 1, pos, m_slop, p_slop, 1)
+    return back_tracking(2 * N - 1, pos, m_slop, p_slop, 0) + back_tracking(2 * N - 1, pos, m_slop, p_slop, 1)
 
 
 IN = int(sys.stdin.readline())
