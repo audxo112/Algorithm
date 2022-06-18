@@ -3,22 +3,21 @@ import sys
 from collections import deque
 
 
-isG, isR = {"G": 1, "R": 0, "X": 0}, {"G": 0, "R": 1, "X": 0}
-
-
-def back_tracking(N, G, R, candi, n, visited, cases):
-    if N == n:
-        if G + R == 0:
-            cases.append([(*candi[i], c, 1) for i, c in enumerate(visited) if c != "X"])
+def back_tracking(candi, M, n = 0, visited=[]):
+    N = len(candi)
+    if N - n < M:
         return
 
-    for xgr in "XGR":
-        g, r = G - isG[xgr], R - isR[xgr]
-        if g < 0 or r < 0 or N - n - 1 < g + r:
-            continue
-        visited.append(xgr)
-        back_tracking(N, g, r, candi, n + 1, visited, cases)
+    if M == 0:
+        return [list(map(lambda x: candi[x], visited))]
+
+    pos = []
+    for i in range(n, N):
+        visited.append(i)
+        if result := back_tracking(candi, M - 1, i + 1, visited):
+            pos.extend(result)
         visited.pop()
+    return pos
 
 
 def dirs(N, M, x, y):
@@ -32,45 +31,52 @@ def dirs(N, M, x, y):
         yield x, y - 1
 
 
-def bfs(N, M, board, case):
+def bfs(N, M, board, green, red):
     visited = [[0] * M for _ in range(N)]
-    dist = [[0] * M for _ in range(N)]
-    for x, y, tp, d in case:
-        visited[y][x] = tp
-        dist[y][x] = d
+    g_queue, r_queue = deque(green), deque(red)
+    for x, y in green:
+        visited[y][x] = -1
+    for x, y in red:
+        visited[y][x] = -1
 
-    queue = deque(case)
-    flower = 0
-    while queue:
-        x, y, tp, d = queue.popleft()
-        if visited[y][x] == "F":
-            continue
-
-        for nx, ny in dirs(N, M, x, y):
-            if board[ny][nx] == "0" or visited[ny][nx] == "F":
+    flower, time = 0, 1
+    while g_queue and r_queue:
+        for _ in range(len(g_queue)):
+            x, y = g_queue.popleft()
+            if visited[y][x] == -2:
                 continue
 
-            if visited[ny][nx]:
-                if visited[ny][nx] != tp and dist[ny][nx] == d + 1:
-                    visited[ny][nx] = "F"
-                    flower += 1
-            else:
-                visited[ny][nx] = tp
-                dist[ny][nx] = d + 1
-                queue.append((nx, ny, tp, d + 1))
+            for nx, ny in dirs(N, M, x, y):
+                if board[ny][nx] == "0" or visited[ny][nx]:
+                    continue
+                visited[ny][nx] = time
+                g_queue.append((nx, ny))
 
+        for _ in range(len(r_queue)):
+            x, y = r_queue.popleft()
+
+            for nx, ny in dirs(N, M, x, y):
+                if board[ny][nx] == "0" or visited[ny][nx] < 0:
+                    continue
+
+                if visited[ny][nx] == time:
+                    visited[ny][nx] = -2
+                    flower += 1
+                elif not visited[ny][nx]:
+                    visited[ny][nx] = -1
+                    r_queue.append((nx, ny))
+        time += 1
     return flower
 
 
 def solution(N, M, G, R, board):
-    pos = [(x, y) for x in range(M) for y in range(N)]
-    candi = [(x, y) for (x, y) in pos if board[y][x] == "2"]
-
-    cases = []
-    back_tracking(len(candi), G, R, candi, 0, [], cases)
+    candi = [(x, y) for x in range(M) for y in range(N) if board[y][x] == "2"]
     flower = 0
-    for case in cases:
-        flower = max(bfs(N, M, board, case), flower)
+    for pos in back_tracking(candi, G + R):
+        for green in back_tracking(pos, G):
+            red = [x for x in pos if x not in green]
+            flower = max(bfs(N, M, board, green, red), flower)
+
     return flower
 
 
