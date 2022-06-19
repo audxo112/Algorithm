@@ -3,8 +3,12 @@ import sys
 
 
 def back_tracking(L, C, words, vowels, n, vc, visited):
+    N = len(visited)
+    if C - n < L - N:
+        return
+
     if L == 0:
-        if vc >= 1 and len(visited) - vc >= 2:
+        if vc >= 1 and N - vc >= 2:
             print("".join(visited))
         return
 
@@ -15,10 +19,7 @@ def back_tracking(L, C, words, vowels, n, vc, visited):
 
 
 def solution(L, C, words):
-    vowels = [0] * C
-    for i, c in enumerate(words):
-        if c in "aeiou":
-            vowels[i] = 1
+    vowels = [1 if word in "aeiou" else 0 for word in words]
     back_tracking(L, C, words, vowels, 0, 0, [])
 
 
