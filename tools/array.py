@@ -25,11 +25,15 @@ def list_flip(arr):
     return list(zip(*arr))
 
 
+def list_flip_2(arr):
+    return list(map(list, zip(*arr)))
+
+
 # 리스트 90도 회전
-# 1 2 3     3 6 9
-# 4 5 6 ->  2 5 8
-# 7 8 9     1 4 7
-def list_rotate(arr):
+# 1 2 3     7 4 1
+# 4 5 6 ->  8 5 2
+# 7 8 9     9 6 3
+def list_rotate90(arr):
     return list(zip(*arr[::-1]))
 
 
