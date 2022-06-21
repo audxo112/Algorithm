@@ -3,7 +3,15 @@ import sys
 from collections import deque
 
 
-dirs = [(0, 1), (-1, 0), (0, -1), (1, 0)]
+def move(N, M, x, y):
+    if x + 1 < M:
+        yield x + 1, y
+    if x - 1 >= 0:
+        yield x - 1, y
+    if y + 1 < N:
+        yield x, y + 1
+    if y - 1 >= 0:
+        yield x, y - 1
 
 
 def bfs(N, M, board, sx, sy):
@@ -13,9 +21,8 @@ def bfs(N, M, board, sx, sy):
     while queue:
         x, y = queue.popleft()
 
-        for (dx, dy) in dirs:
-            nx, ny = dx + x, dy + y
-            if nx < 0 or nx >= M or ny < 0 or ny >= N or board[ny][nx] == '0':
+        for nx, ny in move(N, M, x, y):
+            if board[ny][nx] == '0':
                 continue
             else:
                 board[ny][nx] = '0'
@@ -36,6 +43,5 @@ def solution(N, M, board):
 
 
 IN, IM = map(int, sys.stdin.readline().split())
-IBoard = [list(sys.stdin.readline().split()) for _ in range(IN)]
+IBoard = [sys.stdin.readline().split() for _ in range(IN)]
 solution(IN, IM, IBoard)
-

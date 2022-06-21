@@ -76,7 +76,6 @@ def solution(N, M, G, R, board):
         for green in back_tracking(pos, G):
             red = [x for x in pos if x not in green]
             flower = max(bfs(N, M, board, green, red), flower)
-
     return flower
 
 
