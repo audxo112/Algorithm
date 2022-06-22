@@ -3,34 +3,42 @@ import sys
 from collections import deque
 
 
-dirs = [(0, 1), (-1, 0), (0, -1), (1, 0)]
+def move(N, M, x, y):
+    if x + 1 < M:
+        yield x + 1, y
+    if x - 1 >= 0:
+        yield x - 1, y
+    if y + 1 < N:
+        yield x, y + 1
+    if y - 1 >= 0:
+        yield x, y - 1
 
 
-def solution(M, N, board, queue):
+def bfs(M, N, board, queue):
     date = 0
     while queue:
-        x, y, d = queue.popleft()
-        date = d
-        for (dx, dy) in dirs:
-            nx, ny = x + dx, y + dy
-            ni = ny * M + nx
-            if nx < 0 or nx >= M or ny < 0 or ny >= N or board[ni]:
-                continue
-            board[ni] = -1
-            queue.append((nx, ny, d + 1))
+        for _ in range(len(queue)):
+            x, y = queue.popleft()
+            for nx, ny in move(N, M, x, y):
+                if board[ny][nx]:
+                    continue
+                board[ny][nx] = -1
+                queue.append((nx, ny))
+        date += 1
+    return date - 1 if sum(sum(board, [])) == - N * M else -1
 
-    return date if sum(board) == - N * M else -1
+
+def solution(M, N, board):
+    queue = deque()
+    for y in range(N):
+        for x in range(M):
+            if board[y][x] == 1:
+                board[y][x] = -1
+                queue.append((x, y))
+
+    return bfs(M, N, board, queue)
 
 
 IM, IN = map(int, sys.stdin.readline().split())
-IBoard, IQueue = [], deque()
-for iy in range(IN):
-    for ix, t in enumerate(map(int, sys.stdin.readline().split())):
-        if t == 1:
-            IBoard.append(-1)
-            IQueue.append((ix, iy, 0))
-        else:
-            IBoard.append(t)
-print(solution(IM, IN, IBoard, IQueue))
-
-
+IBoard = [sys.stdin.readline().split() for _ in range(IN)]
+print(solution(IM, IN, IBoard))
