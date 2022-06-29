@@ -86,5 +86,17 @@ def acc_array():
         print(ar)
 
 
+# 일반 자료형 만 있는 경우 deepcopy 보다 훨씬 빠르다
+def copy_2d_array(arr):
+    return [ar[:] for ar in arr]
+
+
+def save_value_with_slice(arr, left, right, value):
+    arr[left:right] = [value] * (right - left)
+
+
 if __name__ == "__main__":
-    acc_array()
+    a = [0] * 10
+    print(a)
+    save_value_with_slice(a, 2, 6, 3)
+    print(a)

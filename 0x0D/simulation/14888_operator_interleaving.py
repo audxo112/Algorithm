@@ -2,7 +2,7 @@
 import sys
 
 
-def calculate(num1, num2, op):
+def cal(num1, num2, op):
     if op == 0:
         return num1 + num2
     elif op == 1:
@@ -24,13 +24,13 @@ def back_tracking(N, nums, ops, n, num, max_val, min_val):
         if not ops[i]:
             continue
         ops[i] -= 1
-        max_val, min_val = back_tracking(N, nums, ops, n + 1, calculate(num, nums[n], i), max_val, min_val)
+        max_val, min_val = back_tracking(N, nums, ops, n + 1, cal(num, nums[n], i), max_val, min_val)
         ops[i] += 1
     return max_val, min_val
 
 
 def solution(N, nums, ops):
-    return back_tracking(N, nums, ops, 1, nums[0], -1000000000, 1000000000)
+    return back_tracking(N, nums, ops, 1, nums[0], -1e9, 1e9)
 
 
 IN = int(sys.stdin.readline())

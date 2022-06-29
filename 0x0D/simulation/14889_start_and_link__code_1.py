@@ -12,7 +12,6 @@ def back_tracking(N, M, board, n, a_team, b_team, a_val, b_val, m_val):
         for i in range(n, N):
             b_team.append(i)
             b_val += score(board, b_team, i)
-        print(a_team, b_team, a_val,b_val)
         return min(abs(a_val - b_val), m_val)
 
     for i in range(n, N):
@@ -23,7 +22,6 @@ def back_tracking(N, M, board, n, a_team, b_team, a_val, b_val, m_val):
         a_team.pop()
         b_team.append(i)
         b_val += score(board, b_team, i)
-
     return m_val
 
 
