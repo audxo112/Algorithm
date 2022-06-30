@@ -95,8 +95,8 @@ def save_value_with_slice(arr, left, right, value):
     arr[left:right] = [value] * (right - left)
 
 
-if __name__ == "__main__":
-    a = [0] * 10
-    print(a)
-    save_value_with_slice(a, 2, 6, 3)
-    print(a)
+# 결과 : {'cat': 'meow', 'dog': 'woof', 'lion': 'roar'}
+def list_merge_to_dict():
+    animals = ['cat', 'dog', 'lion']
+    sounds = ['meow', 'woof', 'roar']
+    return dict(zip(animals, sounds))
