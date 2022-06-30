@@ -8,11 +8,9 @@ dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
 def bfs(R, C, board, visited, oid, sx, sy, swans):
     visited[sy][sx] = True
-    ice = []
+    ice = set()
     queue = deque([(sx, sy)])
-    cnt = 0
     while queue:
-        cnt += 1
         x, y = queue.popleft()
 
         if board[y][x] == ".":
@@ -27,7 +25,7 @@ def bfs(R, C, board, visited, oid, sx, sy, swans):
                 continue
             visited[ny][nx] = True
             if board[ny][nx] == "X":
-                ice.append((nx, ny))
+                ice.add((nx, ny))
                 board[ny][nx] = oid
             else:
                 queue.append((nx, ny))
