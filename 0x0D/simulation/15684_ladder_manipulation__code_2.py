@@ -6,33 +6,33 @@ def simulation(N, H, board):
     for n in range(1, N - 1):
         c = n
         for h in range(1, H):
-            if board[h][c]:
-                c = board[h][c]
+            c += board[h][c]
         if c != n:
             return False
     return True
 
 
-def back_tracking(C, N, H, board, pos, l_cnt, ans):
+def back_tracking(C, N, H, n, board, pos, l_cnt, ans):
     if C >= ans:
         return ans
-
-    if simulation(N, H, board):
+    elif simulation(N, H, board):
         return min(C, ans)
-    elif C == 3:
+
+    if C == 3:
         return ans
 
     odd = sum([cnt % 2 for cnt in l_cnt])
     if odd > 3 - C:
         return ans
 
-    for x, y in pos:
+    for i in range(n, len(pos)):
+        x, y = pos[i]
         if board[y][x] or board[y][x + 1]:
             continue
-        board[y][x], board[y][x + 1] = x + 1, x
+        board[y][x], board[y][x + 1] = 1, -1
         l_cnt[x] += 1
-        ans = back_tracking(C + 1, N, H, board, pos, l_cnt, ans)
-        board[y][x], board[y][x + 1] = 0, 0
+        ans = back_tracking(C + 1, N, H, i + 1, board, pos, l_cnt, ans)
+        board[y][x] = board[y][x + 1] = 0
         l_cnt[x] -= 1
 
     return ans
@@ -40,14 +40,14 @@ def back_tracking(C, N, H, board, pos, l_cnt, ans):
 
 def solution(N, M, H, line):
     N, H = N + 1, H + 1
-    board = [[0] * N for _ in range(H)]
+    board = [[False] * N for _ in range(H)]
     l_cnt = [0] * (N - 1)
     for y, x in line:
-        board[y][x + 1], board[y][x] = x, x + 1
+        board[y][x], board[y][x + 1] = 1, -1
         l_cnt[x] += 1
 
-    pos = [(x, y) for y in range(1, H) for x in range(1, N - 1) if board[y][x] == 0 and board[y][x + 1] == 0]
-    answer = back_tracking(0, N, H, board, pos, l_cnt, 4)
+    pos = [(x, y) for y in range(1, H) for x in range(1, N - 1) if not board[y][x] and not board[y][x + 1]]
+    answer = back_tracking(0, N, H, 0, board, pos, l_cnt, 4)
     return answer if answer != 4 else -1
 
 
