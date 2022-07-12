@@ -22,12 +22,12 @@ def simulation(N, A, sx, sy, d1, d2):
 def solution(N, A):
     answer = 40000
     d1 = d2 = 1
-    while d1 < N - d2 and N - d1 - d2 > 0:
+    while N - d1 - d2 > 0:
         for y in range(d1, N - d2):
-            for x in range(N - d1 - d2):
+            for x in range(1, N + 1 - d1 - d2):
                 answer = min(simulation(N, A, x, y, d1, d2), answer)
         d1 += 1
-        if d1 >= N - d2 or N - d1 - d2 <= 0:
+        if N - d1 - d2 <= 0:
             d1 = 1
             d2 += 1
     return answer
